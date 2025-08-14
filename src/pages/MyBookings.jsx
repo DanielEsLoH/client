@@ -52,45 +52,51 @@ const MyBookings = () => {
                 </p>
                 <p
                   className={`px-3 py-1 text-xs rounded-full ${
-                    booking.status === 'confirmed'
-                      ? 'bg-green-400/15 text-green-600'
-                      : 'bg-red-400/15 text-red-600'
+                    booking.status === "confirmed"
+                      ? "bg-green-400/15 text-green-600"
+                      : "bg-red-400/15 text-red-600"
                   }`}
                 >
                   {booking.status}
                 </p>
               </div>
 
-              <div className='flex items-start gap-2 mt-3'>
-                <img 
-                  src={assets.calendar_icon_colored} 
-                  alt="" 
-                  className='w-4 h-4'
+              <div className="flex items-start gap-2 mt-3">
+                <img
+                  src={assets.calendar_icon_colored}
+                  alt=""
+                  className="w-4 h-4"
                 />
                 <div>
-                  <p className='text-gray-500'>Rental Period</p>
-                  <p>{booking.pickupDate.split("T")[0]} To {booking.returnDate.split("T")[0]}</p>
+                  <p className="text-gray-500">Rental Period</p>
+                  <p>
+                    {booking.pickupDate.split("T")[0]} To{" "}
+                    {booking.returnDate.split("T")[0]}
+                  </p>
                 </div>
               </div>
 
-              <div className='flex items-start gap-2 mt-3'>
-                <img 
-                  src={assets.location_icon_colored} 
-                  alt="" 
-                  className='w-4 h-4'
+              <div className="flex items-start gap-2 mt-3">
+                <img
+                  src={assets.location_icon_colored}
+                  alt=""
+                  className="w-4 h-4"
                 />
                 <div>
-                  <p className='text-gray-500'>Pick-up Location</p>
+                  <p className="text-gray-500">Pick-up Location</p>
                   <p>{booking.car.location}</p>
                 </div>
               </div>
             </div>
 
             {/* Price */}
-            <div className='md:col-span-1 flex flex-col justify-between gap-6'>
-              <div className='text-sm text-gray-500 text-right'>
+            <div className="md:col-span-1 flex flex-col justify-between gap-6">
+              <div className="text-sm text-gray-500 text-right">
                 <p>Total Price</p>
-                <h1 className='text-2xl font-semibold text-primary'>{currency}{booking.price}</h1>
+                <h1 className="text-2xl font-semibold text-primary">
+                  {currency}
+                  {booking.price}
+                </h1>
                 <p>Booked on {booking.createdAt.split("T")[0]}</p>
               </div>
             </div>
