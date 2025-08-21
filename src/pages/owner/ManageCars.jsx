@@ -23,7 +23,9 @@ const ManageCars = () => {
 
   const toggleAvailability = async (carId) => {
     try {
-      const { data } = await axios.patch(`/api/owner/toggle-car/${carId}/availability`);
+      const { data } = await axios.patch(
+        `/api/owner/toggle-car/${carId}/availability`
+      );
       if (data.success) {
         toast.success(data.message);
         fetchOwnerCars();
@@ -43,7 +45,7 @@ const ManageCars = () => {
       if (!confirm) {
         return null;
       }
-      const { data } = await axios.delete("/api/owner/delete-car", { data: { carId } });
+      const { data } = await axios.delete(`/api/owner/delete-car/${carId}`);
       if (data.success) {
         toast.success(data.message);
         fetchOwnerCars();
