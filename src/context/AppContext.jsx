@@ -1,4 +1,4 @@
-import { useState, createContext, useContext, useEffect } from "react";
+import { useState, createContext, useContext, useEffect, useRef } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +17,8 @@ export const AppProvider = ({ children }) => {
   const [pickupDate, setPickupDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
   const [cars, setCars] = useState([]);
+
+  const isLoggingOut = useRef(false);
   // Function to check if user is logged in
   const fetchUser = async () => {
     try {
@@ -41,13 +43,16 @@ export const AppProvider = ({ children }) => {
     }
   };
   // Function to log out the user
-  const logout = () => {
+  const logout = (fromInterceptor = false) => {
     localStorage.removeItem("token");
     setToken(null);
     setUser(null);
     setIsOwner(false);
-    axios.defaults.headers.common["Authorization"] = "";
-    toast.success("You have been logged out");
+    delete axios.defaults.headers.common["Authorization"];
+    if (!fromInterceptor) {
+      toast.success("Logged out successfully");
+      navigate("/");
+    }
   };
 
   // useEffect to retrieve the token from localStorage
@@ -59,10 +64,32 @@ export const AppProvider = ({ children }) => {
   //useEffect to fetch user data when token is available
   useEffect(() => {
     if (token) {
-      axios.defaults.headers.common["Authorization"] = `${token}`;
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       fetchUser();
     }
   }, [token]);
+
+  // Interceptor for handling 401 errors
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401 && !isLoggingOut.current) {
+          isLoggingOut.current = true;
+          toast.error(error.response.data.message);
+          logout(true);
+          setTimeout(() => {
+            isLoggingOut.current = false;
+          }, 1000);
+        }
+        return Promise.reject(error);
+      }
+    );
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+    };
+  }, []);
+
   const value = {
     navigate,
     currency,

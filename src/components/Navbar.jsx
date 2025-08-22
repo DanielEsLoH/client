@@ -52,9 +52,25 @@ const Navbar = () => {
         } ${open ? "max-sm:translate-x-0" : "max-sm:translate-x-full"}`}
       >
         {menuLinks.map((link, index) => (
-          <Link key={index} to={link.path}>
-            {link.name}
-          </Link>
+          <div key={index}>
+            {link.name === "My Bookings" ? (
+              <button
+                onClick={() => {
+                  if (user) {
+                    navigate(link.path);
+                  } else {
+                    toast.error("Please login to view your bookings");
+                    setShowLogin(true);
+                  }
+                }}
+                className="cursor-pointer"
+              >
+                {link.name}
+              </button>
+            ) : (
+              <Link to={link.path}>{link.name}</Link>
+            )}
+          </div>
         ))}
 
         <div className="hidden lg:flex items-center text-sm gap-2 border border-borderColor px-3 rounded-full max-w-56">
