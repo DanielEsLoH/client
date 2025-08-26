@@ -36,8 +36,16 @@ export const AppProvider = ({ children }) => {
   // Function to fetch all cars from the server
   const fetchCars = async () => {
     try {
-      const { data } = await axios.get("/api/user/cars");
-      data.success ? setCars(data.cars) : toast.error(data.message);
+      const headers = token
+        ? { Authorization: `Bearer ${token}` }
+        : undefined;
+
+      const { data } = await axios.get("/api/user/cars", { headers });
+      if (data.success) {
+        setCars(data.cars);
+      } else {
+        toast.error(data.message);
+      }
     } catch (error) {
       toast.error(error.message);
     }
@@ -57,12 +65,14 @@ export const AppProvider = ({ children }) => {
 
   // useEffect to retrieve the token from localStorage
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setToken(token);
-    fetchCars();
+    const localToken = localStorage.getItem("token");
+    if (localToken) {
+      setToken(localToken);
+    }
   }, []);
-  //useEffect to fetch user data when token is available
+
   useEffect(() => {
+    fetchCars();
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       fetchUser();
