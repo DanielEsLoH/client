@@ -14,6 +14,7 @@ import ManageBookings from "./pages/owner/ManageBookings";
 import Login from "./components/Login";
 import { Toaster } from "react-hot-toast";
 import { useAppContext } from "./context/AppContext";
+import Verify from "./components/Verify";
 
 const App = () => {
   const { showLogin } = useAppContext();
@@ -27,6 +28,7 @@ const App = () => {
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/verify/:token" element={<Verify />} />
         <Route path="/car-details/:id" element={<CarDetails />} />
         <Route path='/cars' element={<Cars />} />
         <Route path='/my-bookings' element={<MyBookings />} />

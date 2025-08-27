@@ -22,7 +22,9 @@ export const AppProvider = ({ children }) => {
   // Function to check if user is logged in
   const fetchUser = async () => {
     try {
-      const { data } = await axios.get("/api/user/data");
+      const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+
+      const { data } = await axios.get("/api/user/data", { headers });
       if (data.success) {
         setUser(data.user);
         setIsOwner(data.user.role === "owner");
@@ -33,12 +35,11 @@ export const AppProvider = ({ children }) => {
       toast.error(error.message);
     }
   };
+
   // Function to fetch all cars from the server
   const fetchCars = async () => {
     try {
-      const headers = token
-        ? { Authorization: `Bearer ${token}` }
-        : undefined;
+      const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
 
       const { data } = await axios.get("/api/user/cars", { headers });
       if (data.success) {

@@ -8,6 +8,7 @@ const Login = () => {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+
   const onSubmitHandler = async (event) => {
     try {
       event.preventDefault();
@@ -16,12 +17,18 @@ const Login = () => {
         email,
         password,
       });
+
       if (data.success) {
-        navigate("/");
-        setToken(data.token);
-        localStorage.setItem("token", data.token);
-        setShowLogin(false);
         toast.success(data.message);
+
+        if (state === "login") {
+          setToken(data.token);
+          localStorage.setItem("token", data.token);
+          navigate("/");
+          setShowLogin(false);
+        } else {
+          setShowLogin(false);
+        }
       } else {
         toast.error(data.message);
       }
@@ -29,6 +36,7 @@ const Login = () => {
       toast.error(error.message);
     }
   };
+
   return (
     <div
       onClick={() => setShowLogin(false)}
@@ -43,6 +51,7 @@ const Login = () => {
           <span className="text-primary">User</span>{" "}
           {state === "login" ? "Login" : "Sign Up"}
         </p>
+
         {state === "register" && (
           <div className="w-full">
             <p>Name</p>
@@ -56,6 +65,7 @@ const Login = () => {
             />
           </div>
         )}
+
         <div className="w-full ">
           <p>Email</p>
           <input
@@ -67,6 +77,7 @@ const Login = () => {
             required
           />
         </div>
+
         <div className="w-full ">
           <p>Password</p>
           <input
@@ -78,6 +89,7 @@ const Login = () => {
             required
           />
         </div>
+
         {state === "register" ? (
           <p>
             Already have account?{" "}
@@ -99,6 +111,7 @@ const Login = () => {
             </span>
           </p>
         )}
+
         <button className="bg-primary hover:bg-blue-800 transition-all text-white w-full py-2 rounded-md cursor-pointer">
           {state === "register" ? "Create Account" : "Login"}
         </button>
